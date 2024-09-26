@@ -264,9 +264,24 @@
 
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
     <script>
+      // Initialisation du localStorage
+      localStorage.monsters = JSON.stringify([
+        {
+          id: Date.now(),
+          name: "Aquadragon",
+          img: "images/aquadragon.png",
+          pv: 65,
+          attack: 12,
+          description: "Lorem ipsum",
+          type: "aquatique",
+        },
+      ]);
+
       Vue.createApp({
         data() {
-          return;
+          return {
+            monsters: JSON.parse(localStorage.getItem("monsters")) || [],
+          };
         },
       }).mount("#app");
     </script>
