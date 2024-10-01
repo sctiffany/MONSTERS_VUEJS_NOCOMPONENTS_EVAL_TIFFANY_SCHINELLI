@@ -154,13 +154,22 @@
                 <option value="spectral">Spectral</option>
               </select>
             </div>
-
-            <button
-              class="w-full bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
-              @click.prevent="addOne()"
+            <template v-if="!isEditing">
+              <button
+                class="w-full bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+                @click.prevent="addOne()"
+              >
+                Ajouter Monstre
+              </button>
+            </template>
+            <template v-else
+              ><button
+                class="w-full bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+                @click.prevent="updateOneById(newMonster.id)"
+              >
+                Modifier Monstre
+              </button></template
             >
-              Ajouter Monstre
-            </button>
           </form>
         </div>
 
@@ -256,6 +265,7 @@
             <div class="text-right">
               <button
                 class="bg-red-500 hover:bg-red-700 text-white px-4 py-2 rounded-full"
+                @click.prevent="editOneById(monster.id)"
               >
                 Modifier
               </button>
@@ -307,6 +317,7 @@
               type: "",
               isDeleted: false,
             },
+            isEditing: false,
           };
         },
         methods: {
@@ -334,6 +345,29 @@
                 this.monsters.splice(monsterIndex, 1);
               }, 1500);
             }
+          },
+          editOneById(id) {
+            this.newMonster = {
+              ...this.monsters.find((monster) => monster.id === id),
+            };
+            this.isEditing = true;
+          },
+          updateOneById(id) {
+            const monsterIndex = this.monsters.findIndex(
+              (monster) => monster.id == id
+            );
+            this.newMonster.img = this.newMonsterImg;
+            this.monsters[monsterIndex] = { ...this.newMonster };
+            this.newMonster = {
+              id: null,
+              name: "",
+              img: "",
+              pv: null,
+              attack: null,
+              description: "",
+              type: "",
+            };
+            this.isEditing = false;
           },
         },
         computed: {
