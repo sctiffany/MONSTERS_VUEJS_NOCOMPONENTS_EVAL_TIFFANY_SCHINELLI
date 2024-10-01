@@ -92,12 +92,28 @@
           </div>
         </header>
         <div class="flex">
-          <button class="tab-button active">Ajouter un Monstre</button>
-          <button class="tab-button">Filtres</button>
+          <button
+            class="tab-button"
+            :class="{ 'active' : !isFiltersTabActive}"
+            @click.prevent="activateAddMonstersTab()"
+          >
+            Ajouter un Monstre
+          </button>
+          <button
+            class="tab-button"
+            :class="{ 'active' : isFiltersTabActive}"
+            @click.prevent="activateFiltersTab()"
+          >
+            Filtres
+          </button>
         </div>
 
         <!-- Contenu des onglets -->
-        <div id="form" class="tab-content active">
+        <div
+          id="form"
+          class="tab-content"
+          :class="{ 'active' : !isFiltersTabActive}"
+        >
           <h2 class="text-3xl monster-header mb-6">Ajouter un Monstre</h2>
           <form class="grid grid-cols-1 gap-4">
             <div>
@@ -174,7 +190,11 @@
         </div>
 
         <!-- Contenu des filtres -->
-        <div id="filters" class="tab-content">
+        <div
+          id="filters"
+          class="tab-content"
+          :class="{ 'active' : isFiltersTabActive}"
+        >
           <h2 class="text-3xl monster-header mb-6">Filtres</h2>
           <form class="grid grid-cols-1 gap-4">
             <div>
@@ -318,6 +338,7 @@
               isDeleted: false,
             },
             isEditing: false,
+            isFiltersTabActive: false,
             searchQuery: "",
           };
         },
@@ -371,6 +392,12 @@
               type: "",
             };
             this.isEditing = false;
+          },
+          activateFiltersTab() {
+            this.isFiltersTabActive = true;
+          },
+          activateAddMonstersTab() {
+            this.isFiltersTabActive = false;
           },
         },
         computed: {
