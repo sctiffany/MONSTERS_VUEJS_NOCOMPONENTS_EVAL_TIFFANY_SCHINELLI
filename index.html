@@ -318,6 +318,7 @@
               isDeleted: false,
             },
             isEditing: false,
+            searchQuery: "",
           };
         },
         methods: {
@@ -325,6 +326,7 @@
             this.newMonster.id = Date.now();
             this.newMonster.img = this.newMonsterImg;
             this.monsters.push({ ...this.newMonster });
+            this.sortMonsters;
             this.newMonster = {
               id: null,
               name: "",
@@ -358,6 +360,7 @@
             );
             this.newMonster.img = this.newMonsterImg;
             this.monsters[monsterIndex] = { ...this.newMonster };
+            this.sortMonsters;
             this.newMonster = {
               id: null,
               name: "",
@@ -376,6 +379,15 @@
               ? `images/${this.newMonster.name.toLowerCase()}.png`
               : "";
           },
+          sortMonsters() {
+            return this.monsters.sort(function compare(a, b) {
+              return a.name.localeCompare(b.name);
+            });
+          },
+        },
+        mounted() {
+          // mounted --> chargement du DOM
+          this.sortMonsters;
         },
         watch: {
           monsters: {
