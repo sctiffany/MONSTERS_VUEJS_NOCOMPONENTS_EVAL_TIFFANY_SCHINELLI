@@ -203,6 +203,7 @@
                 type="text"
                 class="w-full p-2 bg-gray-800 text-white rounded"
                 placeholder="Nom du monstre"
+                v-model="searchQuery.name"
               />
             </div>
 
@@ -247,7 +248,10 @@
 
             <div>
               <label class="block mb-2">Type de Monstre</label>
-              <select class="w-full p-2 bg-gray-800 text-white rounded">
+              <select
+                class="w-full p-2 bg-gray-800 text-white rounded"
+                v-model="searchQuery.type"
+              >
                 <option value="">Tous les types</option>
                 <option value="aquatique">Aquatique</option>
                 <option value="terrestre">Terrestre</option>
@@ -267,7 +271,7 @@
           <!-- Carte de monstre -->
           <div
             class="monster-card bg-gray-700 rounded-lg shadow-lg p-6 animate__animated"
-            v-for="monster in monsters"
+            v-for="monster in filteredMonsters"
             :key="monster.id"
             :data-monster-type="monster.type"
             :class="{ animate__backOutRight: monster.isDeleted }"
@@ -339,7 +343,7 @@
             },
             isEditing: false,
             isFiltersTabActive: false,
-            searchQuery: "",
+            searchQuery: { name: "", type: "" },
           };
         },
         methods: {
@@ -407,8 +411,20 @@
               : "";
           },
           sortMonsters() {
-            return this.monsters.sort(function compare(a, b) {
+            return this.filteredMonsters.sort(function compare(a, b) {
               return a.name.localeCompare(b.name);
+            });
+          },
+          filteredMonsters() {
+            return this.monsters.filter((monster) => {
+              return (
+                (this.searchQuery.name === "" ||
+                  monster.name
+                    .toLowerCase()
+                    .startsWith(this.searchQuery.name.toLowerCase())) &&
+                (this.searchQuery.type === "" ||
+                  monster.type === this.searchQuery.type)
+              );
             });
           },
         },
