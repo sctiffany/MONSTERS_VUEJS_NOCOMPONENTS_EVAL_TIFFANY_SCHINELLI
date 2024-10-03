@@ -215,6 +215,7 @@
                   type="number"
                   class="w-full p-2 bg-gray-800 text-white rounded"
                   placeholder="Min PV"
+                  v-model="searchQuery.minPv"
                 />
               </div>
               <div>
@@ -223,6 +224,7 @@
                   type="number"
                   class="w-full p-2 bg-gray-800 text-white rounded"
                   placeholder="Max PV"
+                  v-model="searchQuery.maxPv"
                 />
               </div>
             </div>
@@ -234,6 +236,7 @@
                   type="number"
                   class="w-full p-2 bg-gray-800 text-white rounded"
                   placeholder="Min Attaque"
+                  v-model="searchQuery.minAttack"
                 />
               </div>
               <div>
@@ -242,6 +245,7 @@
                   type="number"
                   class="w-full p-2 bg-gray-800 text-white rounded"
                   placeholder="Max Attaque"
+                  v-model="searchQuery.maxAttack"
                 />
               </div>
             </div>
@@ -343,7 +347,16 @@
             },
             isEditing: false,
             isFiltersTabActive: false,
-            searchQuery: { name: "", type: "" },
+            searchQuery: {
+              name: "",
+              minPv: "",
+              maxPv: "",
+              minAttack: "",
+              maxAttack: "",
+              type: "",
+            },
+            // Guillemets vide parce que quand on supprime une chaine de caractères,
+            //sa valeur devient une chaine vide au lieu de null donc n'affiche pas tous les monstres quand il n'y a plus de filtre activé
           };
         },
         methods: {
@@ -416,14 +429,21 @@
             });
           },
           filteredMonsters() {
+            const searchQuery = this.searchQuery;
             return this.monsters.filter((monster) => {
               return (
-                (this.searchQuery.name === "" ||
+                (searchQuery.name === "" ||
                   monster.name
                     .toLowerCase()
-                    .startsWith(this.searchQuery.name.toLowerCase())) &&
-                (this.searchQuery.type === "" ||
-                  monster.type === this.searchQuery.type)
+                    .startsWith(searchQuery.name.toLowerCase())) &&
+                (searchQuery.type === "" ||
+                  monster.type === searchQuery.type) &&
+                (searchQuery.minPv === "" || monster.pv >= searchQuery.minPv) &&
+                (searchQuery.maxPv === "" || monster.pv <= searchQuery.maxPv) &&
+                (searchQuery.minAttack === "" ||
+                  monster.attack >= searchQuery.minAttack) &&
+                (searchQuery.maxAttack === "" ||
+                  monster.attack <= searchQuery.maxAttack)
               );
             });
           },
